@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -78,6 +79,8 @@ function App() {
         {/* CATCH ALL */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      
+      <SpeedInsights />
     </BrowserRouter>
   );
 }

@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "./Navbar";
 import "./Profile.css";
 import { toast } from "react-toastify";
 
 export default function Profile() {
-  // Profile state
+  // Profile state - initialize with empty values instead of hardcoded ones
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    bloodGroup: "O+",
-    phone: "9876543210",
-    city: "Mumbai",
+    name: "",
+    bloodGroup: "",
+    phone: "",
+    city: "",
     lat: 19.0760,
     lng: 72.8777,
-    availability: true,
+    availability: false,
   });
 
   // Edit mode state
@@ -22,37 +23,33 @@ export default function Profile() {
   const [editData, setEditData] = useState(profile);
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Load profile from localStorage on mount
+  // Load profile from Firebase when authentication state changes
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        // Get current user
-        const currentUser = auth.currentUser;
-        if (!currentUser) return;
-
-        // Try to load from Firebase first
-        const profileDoc = await getDoc(doc(db, "donors", currentUser.uid));
-        if (profileDoc.exists()) {
-          const firebaseData = profileDoc.data();
-          setProfile(firebaseData);
-          setEditData(firebaseData);
-        } else {
-          // Fallback to user-specific localStorage
-          const userStorageKey = `userProfile_${currentUser.uid}`;
-          const savedProfile = localStorage.getItem(userStorageKey);
-          if (savedProfile) {
-            const data = JSON.parse(savedProfile);
-            setProfile(data);
-            setEditData(data);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // Load from Firebase first
+          const profileDoc = await getDoc(doc(db, "donors", user.uid));
+          if (profileDoc.exists()) {
+            const firebaseData = profileDoc.data();
+            setProfile(firebaseData);
+            setEditData(firebaseData);
+          } else {
+            // Fallback to user-specific localStorage
+            const userStorageKey = `userProfile_${user.uid}`;
+            const savedProfile = localStorage.getItem(userStorageKey);
+            if (savedProfile) {
+              const data = JSON.parse(savedProfile);
+              setProfile(data);
+              setEditData(data);
+            }
           }
-        }
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        // Fallback to user-specific localStorage on error
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-          const userStorageKey = `userProfile_${currentUser.uid}`;
+        } catch (error) {
+          console.error("Error loading profile:", error);
+          // Fallback to localStorage on error
+          const userStorageKey = `userProfile_${user.uid}`;
           const savedProfile = localStorage.getItem(userStorageKey);
           if (savedProfile) {
             const data = JSON.parse(savedProfile);
@@ -61,9 +58,10 @@ export default function Profile() {
           }
         }
       }
-    };
+      setLoading(false);
+    });
 
-    loadProfile();
+    return () => unsubscribe();
   }, []);
 
   // Validation functions
@@ -155,7 +153,7 @@ export default function Profile() {
           {/* Profile Header */}
           <div className="profile-header">
             <h2>My Profile</h2>
-            {!isEditing && (
+            {!isEditing && !loading && (
               <button
                 className="btn btn-danger btn-edit"
                 onClick={startEdit}
@@ -165,7 +163,15 @@ export default function Profile() {
             )}
           </div>
 
-          <div className="profile-content">
+          {loading ? (
+            <div className="text-center p-4">
+              <div className="spinner-border text-danger" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-2">Loading profile...</p>
+            </div>
+          ) : (
+            <div className="profile-content">
             {/* Left Section - Profile Details */}
             <div className="profile-details">
               {isEditing ? (
@@ -312,6 +318,7 @@ export default function Profile() {
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
     </>

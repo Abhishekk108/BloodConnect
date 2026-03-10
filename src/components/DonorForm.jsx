@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
-import { collection, addDoc, serverTimestamp, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, doc, updateDoc, setDoc } from "firebase/firestore";
 import Navbar from "../components/Navbar";
 import DonorMap from "./DonorMap";
 import { toast, ToastContainer } from "react-toastify";
@@ -127,8 +127,8 @@ export default function DonorForm() {
       // Determine if user is available based on availability selection
       const isAvailable = availability === "available_now" || availability === "emergency_only";
 
-      // Save donor eligibility and availability details to "donors" collection
-      await addDoc(collection(db, "donors"), {
+      // Save or update donor details using user's UID as document ID
+      await setDoc(doc(db, "donors", currentUser.uid), {
         userId: currentUser.uid,
         lat: Number(lat),
         lng: Number(lng),
@@ -136,23 +136,11 @@ export default function DonorForm() {
         eligibility: dbEligibility,
         hasDonatedBefore,
         lastDonationDate: hasDonatedBefore ? lastDonationDate : null,
-        availability,
-        consent,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-
-      // Update user's profile with availability status
-      await updateDoc(doc(db, "donors", currentUser.uid), {
-        lat: Number(lat),
-        lng: Number(lng),
         availability: isAvailable,
         availabilityStatus: availability,
-        eligibility: dbEligibility,
-        hasDonatedBefore,
-        lastDonationDate: hasDonatedBefore ? lastDonationDate : null,
+        consent,
         updatedAt: serverTimestamp(),
-      });
+      }, { merge: true });
 
       toast.success("Donor registration updated successfully!");
       setEligibilityRules(initialEligibilityRules);

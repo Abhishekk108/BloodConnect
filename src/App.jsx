@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import UserDetailsForm from "./components/UserDetailsForm";
 import Home from "./components/Home";
 import DonorForm from "./components/DonorForm";
 import DonorList from "./components/DonorList";
@@ -62,6 +63,10 @@ function App() {
         />
 
         {/* PRIVATE ROUTES */}
+        <Route
+          path="/complete-profile"
+          element={user ? <UserDetailsForm /> : <Navigate to="/login" />}
+        />
         <Route
           path="/donate"
           element={user ? <DonorForm /> : <Navigate to="/login" />}

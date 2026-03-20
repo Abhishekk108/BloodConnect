@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { googleSignIn } from "../utils/authService";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
@@ -34,6 +35,10 @@ export default function Login() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    await googleSignIn(navigate);
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -52,6 +57,15 @@ export default function Login() {
 
         <button className="btn btn-danger" onClick={login}>
           Login
+        </button>
+
+        <div className="divider">
+          <span>or</span>
+        </div>
+
+        <button className="btn-google" onClick={handleGoogleSignIn}>
+          <i className="bi bi-google"></i>
+          Continue with Google
         </button>
 
         <p className="login-link">

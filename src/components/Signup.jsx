@@ -4,6 +4,7 @@ import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { googleSignIn } from "../utils/authService";
 import "react-toastify/dist/ReactToastify.css";
 import "./Signup.css";
 
@@ -83,6 +84,10 @@ export default function Signup() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    await googleSignIn(navigate);
+  };
+
   return (
     <div className="signup-container">
       <div className="signup-card">
@@ -148,6 +153,15 @@ export default function Signup() {
 
         <button className="btn btn-danger" onClick={signup}>
           Signup
+        </button>
+
+        <div className="divider">
+          <span>or</span>
+        </div>
+
+        <button className="btn-google" onClick={handleGoogleSignIn}>
+          <i className="bi bi-google"></i>
+          Continue with Google
         </button>
 
         <p className="signup-link">

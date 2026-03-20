@@ -41,6 +41,58 @@
   margin-top: 15px;
 }
 
+.btn-google {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e1e1e1;
+  background: white;
+  color: #333;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-google:hover {
+  background: #f8f9fa;
+  border-color: #dadce0;
+  transform: translateY(-1px);
+}
+
+.btn-google i {
+  font-size: 18px;
+  color: #4285f4;
+}
+
+.divider {
+  margin: 20px 0 15px 0;
+  position: relative;
+  text-align: center;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e1e1e1;
+}
+
+.divider span {
+  background: rgba(255, 255, 255, 0.938);
+  padding: 0 15px;
+  color: #666;
+  font-size: 14px;
+}
+
 .login-link {
   margin-top: 15px;
 }

@@ -1,59 +1,83 @@
-# BloodConnect 🩸
+# BloodConnect — Blood Donor Management System
 
-> A web-based blood donor management system — connecting donors with those in need, when every second counts.
-
-**Live Demo:** [blood-donor-app-psi.vercel.app](https://blood-donor-app-psi.vercel.app/)
-
-> ⚠️ Currently optimized for desktop. Mobile responsiveness is in progress.
+A web-based blood donor management platform that connects eligible donors with patients and healthcare providers through real-time availability tracking and location-based donor discovery.
 
 ---
 
 ## Overview
 
-BloodConnect is a centralized platform where blood donors can register, manage their availability, and be discovered by patients or hospitals during urgent situations. The system enforces donor eligibility rules and uses Firebase for real-time data management.
+BloodConnect streamlines the process of blood donation by allowing users to register as donors, manage their availability, and be discovered during emergencies. The platform validates donor eligibility, maintains donation history, and provides an interactive map for locating nearby donors.
+
+**Live Demo:** https://blood-donor-app-psi.vercel.app/
+
+> **Note:** The application is currently optimized for desktop. Mobile responsiveness is under development.
 
 ---
 
 ## Features
 
-### 🔐 Authentication
-- Secure sign-up and login via Firebase Authentication
-- Email and password-based flow
-
-### 📝 Donor Registration
-- Create and manage a personal donor profile
-- Store blood group, contact details, and location
-- Track donation history
-- Automatic eligibility validation (minimum 90-day gap between donations)
-
-### ⏱ Availability Management
-Donors can set their current status to one of three states:
-
-| Status | Description |
-|---|---|
-| ✅ Available Now | Ready for regular donation requests |
-| 🚨 Emergency Only | Available for critical situations only |
-| ❌ Not Available | Currently unavailable |
-
-### 🗺 Donor Map
-- Interactive map powered by Leaflet
-- Location-based visualization of registered donors
-- Quickly identify nearby donors during emergencies
-
-### 🔔 Notifications
-- Real-time toast notifications for all user actions
-- Clear success and error feedback throughout the app
+* Secure user authentication with Firebase Authentication
+* Donor registration and profile management
+* Blood group and location-based donor records
+* Automatic eligibility validation based on donation history
+* Real-time availability status management
+* Interactive donor map using Leaflet
+* Toast notifications for user actions
+* Cloud-based data storage with Firestore
 
 ---
 
 ## Tech Stack
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19, React Router, Bootstrap 5, Custom CSS |
-| **Backend & Auth** | Firebase Authentication, Firestore |
-| **Maps** | Leaflet, react-leaflet, leaflet-geosearch |
-| **Tooling** | Vite, ESLint, react-toastify |
+### Frontend
+
+* React 19
+* React Router
+* Bootstrap 5
+* Custom CSS
+
+### Backend & Database
+
+* Firebase Authentication
+* Cloud Firestore
+
+### Maps
+
+* Leaflet
+* React Leaflet
+* Leaflet GeoSearch
+
+### Tooling
+
+* Vite
+* ESLint
+* React Toastify
+
+---
+
+## Architecture
+
+```
+User Authentication
+        │
+        ▼
+Donor Registration
+        │
+        ▼
+Eligibility Validation
+        │
+        ▼
+Firestore Database
+        │
+        ▼
+Availability Management
+        │
+        ▼
+Location-Based Donor Search
+        │
+        ▼
+Interactive Donor Map
+```
 
 ---
 
@@ -62,16 +86,10 @@ Donors can set their current status to one of three states:
 ```
 src/
 ├── components/
-│   ├── DonorForm.jsx         # Donor registration and profile form
-│   ├── DonorMap.jsx          # Interactive Leaflet map
-│   ├── DonorList.jsx         # List view of registered donors
-│   ├── UpdateAvailability.jsx # Availability status management
-│   └── Navbar.jsx            # Navigation bar
-│
-├── firebase.js               # Firebase configuration
-├── App.jsx                   # Root component and routing
-├── main.jsx                  # Entry point
-└── App.css                   # Global styles
+├── firebase.js
+├── App.jsx
+├── main.jsx
+└── App.css
 ```
 
 ---
@@ -79,25 +97,21 @@ src/
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v18+ recommended)
-- A Firebase project with Firestore and Authentication enabled
 
-### 1. Clone the Repository
+* Node.js v18+
+* Firebase project with Authentication and Firestore enabled
+
+### Installation
 
 ```bash
 git clone https://github.com/Abhishekk108/blood-donor-app.git
+
 cd blood-donor-app
-```
 
-### 2. Install Dependencies
-
-```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
-
-Create a `.env` file in the project root:
+Create a `.env` file:
 
 ```env
 VITE_FIREBASE_API_KEY=your_api_key
@@ -108,7 +122,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-### 4. Start the Development Server
+Start the development server:
 
 ```bash
 npm run dev
@@ -116,46 +130,25 @@ npm run dev
 
 ---
 
-## Data Model
+## How It Works
 
-Each donor document in the Firestore `donors` collection contains:
-
-```json
-{
-  "bloodGroup": "O+",
-  "phone": "+91XXXXXXXXXX",
-  "city": "Mumbai",
-  "lat": 19.0760,
-  "lng": 72.8777,
-  "isAvailable": true,
-  "availabilityStatus": "available",
-  "eligibility": true,
-  "lastDonationDate": "2024-12-01"
-}
-```
+1. Users register or log in securely.
+2. Donors create and update their profiles.
+3. The system validates donation eligibility.
+4. Donor availability is updated in real time.
+5. Nearby donors are displayed on an interactive map.
+6. Patients and hospitals can identify suitable donors quickly.
 
 ---
 
-## Known Limitations
+## Future Improvements
 
-- Desktop-first design — mobile responsiveness is a work in progress
-
----
-
-## Roadmap
-
-- [ ] Distance-based donor search
-- [ ] Advanced filtering by blood group and city
-- [ ] SMS / Email alerts for emergency requests
-- [ ] Admin dashboard for donor verification
-- [ ] Progressive Web App (PWA) support
-
----
-
-## Author
-
-**Abhishek Kallimath**
-GitHub: [@Abhishekk108](https://github.com/Abhishekk108)
+* Mobile responsive interface
+* Distance-based donor search
+* Advanced filtering by blood group and location
+* Emergency SMS and email notifications
+* Admin dashboard for donor verification
+* Progressive Web App (PWA) support
 
 ---
 
